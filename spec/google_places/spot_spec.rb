@@ -7,7 +7,7 @@ describe GooglePlaces::Spot do
     @lng = '151.1957362'
     @radius = 200
     @sensor = false
-    @reference = "CnRsAAAASc4grenwL0h3X5VPNp5fkDNfqbjt3iQtWIPlKS-3ms9GbnCxR_FLHO0B0ZKCgJSg19qymkeHagjQFB4aUL87yhp4mhFTc17DopK1oiYDaeGthztSjERic8TmFNe-6zOpKSdiZWKE6xlQvcbSiWIJchIQOEYZqunSSZqNDoBSs77bWRoUJcMMVANtSlhy0llKI0MI6VcC7DU"
+    @place_id  = "ChIJky6hZN_QmoAR5AxFy70b-DA"
     @pagetoken = "CmRVAAAAqKK43TjXKnyEx4-XTWd4bC-iBq88Olspwga_JQbEpznYpfwXYbWBrxmb-1QYD4DMtq8gym5YruCEVjByOlKn8PWKQO5fHvuYD8rWKHUeBvMleM7k3oh9TUG8zqcyuhPmEhCG_C2XuypmkQ20hRvxro4sGhQN3nbWCjgpjyG_E_ayjVIoTGbViw"
   end
 
@@ -198,12 +198,12 @@ describe GooglePlaces::Spot do
   context 'Find a single spot' do
     use_vcr_cassette 'single_spot'
     before :each do
-      @spot = GooglePlaces::Spot.find(@reference, api_key, @sensor)
+      @spot = GooglePlaces::Spot.find(@place_id, api_key, @sensor)
     end
     it 'should be a Spot' do
       @spot.class.should == GooglePlaces::Spot
     end
-    %w(reference vicinity lat lng name icon types id formatted_phone_number international_phone_number formatted_address address_components street_number street city region postal_code country rating url types website price_level opening_hours events utc_offset).each do |attribute|
+    %w(place_id vicinity lat lng name icon types formatted_phone_number international_phone_number formatted_address address_components street_number street city region postal_code country rating url types website price_level opening_hours events utc_offset).each do |attribute|
       it "should have the attribute: #{attribute}" do
         @spot.respond_to?(attribute).should == true
       end

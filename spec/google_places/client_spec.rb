@@ -16,11 +16,11 @@ describe GooglePlaces::Client do
   end
 
   it 'should request a single spot' do
-    reference = "CoQBeAAAAO-prCRp9Atcj_rvavsLyv-DnxbGkw8QyRZb6Srm6QHOcww6lqFhIs2c7Ie6fMg3PZ4PhicfJL7ZWlaHaLDTqmRisoTQQUn61WTcSXAAiCOzcm0JDBnafqrskSpFtNUgzGAOx29WGnWSP44jmjtioIsJN9ik8yjK7UxP4buAmMPVEhBXPiCfHXk1CQ6XRuQhpztsGhQU4U6-tWjTHcLSVzjbNxoiuihbaA"
+    place_id = "ChIJky6hZN_QmoAR5AxFy70b-DA"
     @client = GooglePlaces::Client.new(api_key)
-    GooglePlaces::Spot.should_receive(:find).with(reference, api_key, false, {})
+    GooglePlaces::Spot.should_receive(:find).with(place_id, api_key, false, {})
 
-    @client.spot(reference)
+    @client.spot(place_id)
   end
 
   it 'should request spots by query' do

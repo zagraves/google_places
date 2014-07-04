@@ -7,8 +7,8 @@ describe GooglePlaces::Request do
     @query = "Statue of liberty, New York"
     @radius = 200
     @sensor = false
-    @reference = "CnRsAAAASc4grenwL0h3X5VPNp5fkDNfqbjt3iQtWIPlKS-3ms9GbnCxR_FLHO0B0ZKCgJSg19qymkeHagjQFB4aUL87yhp4mhFTc17DopK1oiYDaeGthztSjERic8TmFNe-6zOpKSdiZWKE6xlQvcbSiWIJchIQOEYZqunSSZqNDoBSs77bWRoUJcMMVANtSlhy0llKI0MI6VcC7DU"
-    @reference_not_found = "CnRpAAAAlO2WvF_4eOqp02TAWKsXpPSCFz8KxBjraWhB4MSvdUPqXN0yCpxQgblam1LeRENcWZF-9-2CEfUwlHUli61PaYe0e7dUPAU302tk6KkalnKqx7nv07iFA1Ca_Y1WoCLH9adEWwkxKMITlbGhUUz9-hIQPxQ4Bp_dz5nHloUFkj3rkBoUDSPqy2smqMnPEo4ayfbDupeKEZY"
+    @place_id = "ChIJky6hZN_QmoAR5AxFy70b-DA"
+    @place_id_not_found = "abc123"
     @keyword = "attractions"
   end
 
@@ -167,17 +167,17 @@ describe GooglePlaces::Request do
     context 'with valid options' do
       it 'should retrieve a single spot' do
         response = GooglePlaces::Request.spot(
-          :reference => @reference,
+          :place_id => @place_id,
           :sensor => @sensor,
           :key => api_key
         )
         response['result'].should_not be_empty
       end
-      context 'with reference not found' do
+      context 'with place_id not found' do
         it 'should raise not found error' do
           lambda {
             GooglePlaces::Request.spot(
-              :reference => @reference_not_found,
+              :place_id => @place_id_not_found,
               :sensor => @sensor,
               :key => api_key
             )
@@ -189,13 +189,13 @@ describe GooglePlaces::Request do
       it do
         lambda {
           GooglePlaces::Request.spot(
-            :reference => @reference,
+            :place_id => @place_id,
             :key => api_key
           )
         }.should raise_error GooglePlaces::RequestDeniedError
       end
     end
-    context 'with missing reference' do
+    context 'with missing place_id' do
       context 'without retry options' do
         it do
           lambda {

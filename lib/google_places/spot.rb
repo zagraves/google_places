@@ -2,7 +2,7 @@ require 'google_places/review'
 
 module GooglePlaces
   class Spot
-    attr_accessor :lat, :lng, :name, :icon, :reference, :vicinity, :types, :id, :formatted_phone_number, :international_phone_number, :formatted_address, :address_components, :street_number, :street, :city, :region, :postal_code, :country, :rating, :url, :cid, :website, :reviews, :aspects, :zagat_selected, :zagat_reviewed, :photos, :review_summary, :nextpagetoken, :price_level, :opening_hours, :events, :utc_offset
+    attr_accessor :lat, :lng, :name, :icon, :place_id, :vicinity, :types, :formatted_phone_number, :international_phone_number, :formatted_address, :address_components, :street_number, :street, :city, :region, :postal_code, :country, :rating, :url, :cid, :website, :reviews, :aspects, :zagat_selected, :zagat_reviewed, :photos, :review_summary, :nextpagetoken, :price_level, :opening_hours, :events, :utc_offset
 
     # Search for Spots at the provided location
     #
@@ -87,7 +87,7 @@ module GooglePlaces
       request(:spots, multipage_request, exclude, options)
     end
 
-    # Search for Spots using Radar Search. Spots will only include reference and lat/lng information. You can send a Place Details request for more information about any of them.
+    # Search for Spots using Radar Search. Spots will only include place_id and lat/lng information. You can send a Place Details request for more information about any of them.
     #
     # @return [Array<Spot>]
     # @param [String,Integer] lat the latitude for the search
@@ -170,10 +170,10 @@ module GooglePlaces
 
 
 
-    # Search for a Spot with a reference key
+    # Search for a Spot with a Place ID
     #
     # @return [Spot]
-    # @param [String] reference the reference of the spot
+    # @param [String] placeid the Place ID of the spot
     # @param [String] api_key the provided api key
     # @param [Boolean] sensor
     #   Indicates whether or not the Place request came from a device using a location sensor (e.g. a GPS)
@@ -188,13 +188,13 @@ module GooglePlaces
     # @option options [Object] :retry_options[:status] ([])
     # @option options [Integer] :retry_options[:max] (0) the maximum retries
     # @option options [Integer] :retry_options[:delay] (5) the delay between each retry in seconds
-    def self.find(reference, api_key, sensor, options = {})
+    def self.find(placeid, api_key, sensor, options = {})
       language  = options.delete(:language)
       retry_options = options.delete(:retry_options) || {}
       extensions = options.delete(:review_summary) ? 'review_summary' : nil
 
       response = Request.spot(
-        :reference => reference,
+        :placeid => placeid,
         :sensor => sensor,
         :key => api_key,
         :language => language,
@@ -362,7 +362,7 @@ module GooglePlaces
     # @param [JSON] json_result_object a JSON object to create a Spot from
     # @return [Spot] a newly created spot
     def initialize(json_result_object, api_key, sensor)
-      @reference                  = json_result_object['reference']
+      @place_id                   = json_result_object['place_id']
       @vicinity                   = json_result_object['vicinity']
       @lat                        = json_result_object['geometry']['location']['lat']
       @lng                        = json_result_object['geometry']['location']['lng']
